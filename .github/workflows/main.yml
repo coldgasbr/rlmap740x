@@ -1,0 +1,31 @@
+name: Build RLMap740x (Windows)
+
+on:
+  workflow_dispatch:    # roda manualmente via botão “Run workflow”
+  push:
+    branches: [ master ]  # opcional: dispara em push na master
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      # carrega o ambiente do MSBuild (Visual Studio)
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+        with:
+          vs-version: 'latest'
+
+      # compila a solução .sln em Release
+      - name: Build Solution
+        run: msbuild path\to\YourServer.sln /p:Configuration=Release /m
+
+      # coleta o executável gerado
+      - name: Upload do .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: rlmap740x-server
+          path: path\to\Release\YourServer.exe
